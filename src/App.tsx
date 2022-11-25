@@ -1,5 +1,6 @@
-import "./app.sass"
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
+import "./app.sass";
+import LeftBar from './components/leftBar/LeftBar';
 
 interface IPoint {
   x: number;
@@ -15,7 +16,7 @@ interface IPencil {
   isActive: boolean;
   isMoving: boolean;
   position: IPoint;
-  lastPosition: any;
+  lastPosition: null | IPoint
 }
 
 const App = () => {
@@ -27,7 +28,8 @@ const App = () => {
     lastPosition: null
   }
 
-  const [color, setColor] = useState<string>("#000000")
+  const [pencilColor, setPencilColor] = useState<string>("#000000")
+  const [pencilWidth, setPencilWidth] = useState<number>(1)
 
   useEffect(() => {
 
@@ -36,7 +38,8 @@ const App = () => {
 
     const drawLine = (line: ILine) => {
 
-      ctx.strokeStyle = "color"
+      ctx.strokeStyle = pencilColor
+      ctx.lineWidth = pencilWidth
       ctx.beginPath()
       ctx.moveTo(line.lastPosition.x, line.lastPosition.y)
       ctx.lineTo(line.position.x, line.position.y)
@@ -65,22 +68,25 @@ const App = () => {
 
     handleDraw()
 
-  }, [])
+  }, [pencilColor])
 
   return (
     <div className="App">
-      <canvas
-        id="canvas"
-        width={900}
-        height={700}
-        onMouseDown={() => pencil.isActive = true}
-        onMouseUp={() => pencil.isActive = false}
-        onMouseMove={(e) => {
-          pencil.position.x = e.clientX
-          pencil.position.y = e.clientY
-          pencil.isMoving = true
-        }}
-      />
+      <LeftBar props={[pencilColor, setPencilColor]}/>
+      <div id="canvas-container">
+        <canvas
+          id="canvas"
+          width={900}
+          height={700}
+          onMouseDown={() => pencil.isActive = true}
+          onMouseUp={() => pencil.isActive = false}
+          onMouseMove={(e) => {
+            pencil.position.x = e.clientX - e.currentTarget.getBoundingClientRect().x
+            pencil.position.y = e.clientY - e.currentTarget.getBoundingClientRect().y
+            pencil.isMoving = true
+          }}
+        />
+      </div>
     </div>
   )
 }
