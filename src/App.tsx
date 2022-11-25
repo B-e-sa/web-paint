@@ -1,15 +1,20 @@
 import "./app.sass"
 import { useEffect, useState } from "react"
 
+interface IPoint {
+  x: number;
+  y: number
+}
+
 interface ILine {
-  lastPosition: { x: number, y: number };
-  position: { x: number; y: number }
+  lastPosition: IPoint;
+  position: IPoint
 }
 
 interface IPencil {
   isActive: boolean;
   isMoving: boolean;
-  position: { x: number; y: number; };
+  position: IPoint;
   lastPosition: any;
 }
 
@@ -75,7 +80,7 @@ const App = () => {
           pencil.position.y = e.clientY
           pencil.isMoving = true
         }}
-      ></canvas>
+      />
     </div>
   )
 }
