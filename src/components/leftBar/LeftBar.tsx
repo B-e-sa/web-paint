@@ -1,5 +1,5 @@
+import { ChromePicker } from 'react-color';
 import './leftBar.sass';
-import { CirclePicker, SketchPicker } from 'react-color';
 
 const LeftBar = ({ props }: any) => {
     const defaultColors = [
@@ -18,22 +18,27 @@ const LeftBar = ({ props }: any) => {
     return (
         <>
             <div id='leftbar-container'>
-                <SketchPicker
+                <ChromePicker
                     color={props[0]}
-                    onChange={e => props[1](e.hex)} />
-                <CirclePicker onChange={e => console.log(e.hex)} />
-                {/*
-                                <div id='colors-grid'>
-                    {defaultColors.map((item, index) => {
+                    onChange={e => { props[1](e.rgb) }}
+                />
+                <div id='colors-grid'>
+                    {defaultColors.map((item) => {
                         return (
                             <div
+                                onClick={() => props[1](item)}
+                                style={{ backgroundColor: item }}
                                 className='color-chooser'
-                                style={{ backgroundColor: defaultColors[index] }}
                             ></div>
                         )
                     })}
                 </div>
-                */}
+                <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    onChange={e => console.log(e.currentTarget.value)}
+                />
             </div>
         </>
     )

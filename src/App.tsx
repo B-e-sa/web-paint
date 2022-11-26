@@ -19,6 +19,13 @@ interface IPencil {
   lastPosition: null | IPoint
 }
 
+interface IRgba {
+  r: number
+  g: number
+  b: number
+  a: number
+}
+
 const App = () => {
 
   const pencil: IPencil = {
@@ -28,7 +35,7 @@ const App = () => {
     lastPosition: null
   }
 
-  const [pencilColor, setPencilColor] = useState<string>("#000000")
+  const [pencilColor, setPencilColor] = useState<IRgba>()
   const [pencilWidth, setPencilWidth] = useState<number>(1)
 
   useEffect(() => {
@@ -38,7 +45,12 @@ const App = () => {
 
     const drawLine = (line: ILine) => {
 
-      ctx.strokeStyle = pencilColor
+      const { r, g, b, a } = pencilColor!
+
+      ctx!.strokeStyle = `rgba(
+        ${r}, ${g}, ${b}, ${a}
+      )`
+
       ctx.lineWidth = pencilWidth
       ctx.beginPath()
       ctx.moveTo(line.lastPosition.x, line.lastPosition.y)
@@ -72,7 +84,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <LeftBar props={[pencilColor, setPencilColor]}/>
+      <LeftBar props={[pencilColor, setPencilColor]} />
       <div id="canvas-container">
         <canvas
           id="canvas"
