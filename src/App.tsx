@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./app.sass";
 import LeftBar from './components/leftBar/LeftBar';
 
@@ -28,6 +28,10 @@ export interface IRgba {
 
 const App = () => {
 
+  const [pencilColor, setPencilColor] = useState<IRgba>({ r: 0, g: 0, b: 0, a: 1 });
+  const [pencilWidth, setPencilWidth] = useState<number>(1);
+  const [handleDrawIsActive, sethandleDrawIsActive] = useState<any>(false)
+
   const pencil: IPencil = {
     isActive: false,
     isMoving: false,
@@ -35,19 +39,18 @@ const App = () => {
     lastPosition: null
   };
 
-  const [pencilColor, setPencilColor] = useState<IRgba>({ r: 0, g: 0, b: 0, a: 1 });
-  const [pencilWidth, setPencilWidth] = useState<number>(1);
+  const canvasRef = useRef(null)
 
   useEffect(() => {
 
-    const canvas: any = document.getElementById("canvas");
+    const canvas: any = canvasRef.current
     const ctx = canvas?.getContext("2d");
 
     const drawLine = (line: ILine) => {
 
-      const { r, g, b, a } = pencilColor!;
+      const { r, g, b, a } = pencilColor;
 
-      ctx!.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+      ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
       ctx.lineWidth = pencilWidth;
       ctx.beginPath();
       ctx.moveTo(line.lastPosition.x, line.lastPosition.y);
@@ -57,6 +60,8 @@ const App = () => {
     }
 
     const handleDraw = () => {
+
+      console.log('oi')
 
       if (pencil.isActive && pencil.isMoving && pencil.lastPosition) {
         drawLine({
@@ -72,11 +77,11 @@ const App = () => {
         y: pencil.position.y
       };
 
-      setTimeout(handleDraw, 1);
-
     };
 
-    handleDraw();
+    const drawInterval = setInterval(handleDraw, 1);
+
+    return () => clearInterval(drawInterval) 
 
   }, [pencilColor, pencilWidth]);
 
@@ -88,6 +93,7 @@ const App = () => {
       />
       <div id="canvas-container">
         <canvas
+          ref={canvasRef}
           id="canvas"
           width={900}
           height={700}
