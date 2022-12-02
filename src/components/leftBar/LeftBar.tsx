@@ -1,10 +1,16 @@
 import { ChromePicker } from 'react-color';
 import { IRgba } from '../../App';
 import './leftBar.sass';
+import widthArrow from "../../assets/width-arrow.svg"
+import ColorGrid from '../colorGrid/ColorGrid';
+import { useState } from 'react';
+import UtilsBar from '../utilsBar/UtilsBar';
 
 const LeftBar = ({ pencilColor, pencilWidth }: any) => {
 
-    // the IRgb type will only pick
+    const [pencilWidthInPixels, setPencilWidthInPixels] = useState("1")
+
+    // the IRgba type will only pick
     // rgba "objects", so no strings
     // like "black" or "red"
     const defaultColors: IRgba[] = [
@@ -20,43 +26,39 @@ const LeftBar = ({ pencilColor, pencilWidth }: any) => {
         { r: 249, g: 131, b: 255, a: 1 }  // pink
     ];
 
-    console.log(pencilWidth)
-
     return (
-        <>
-            <div id='leftbar-container'>
-                <ChromePicker
-                    color={pencilColor[0]}
-                    onChange={e => { pencilColor[1](e.rgb) }}
-                />
-                <div id='colors-grid'>
-                    {defaultColors.map((item) => {
-                        return (
-                            <div
-                                onClick={() => pencilColor[1](item)}
-                                style={{
-                                    backgroundColor:
-                                        `rgba(
-                                        ${item.r}, 
-                                        ${item.g}, 
-                                        ${item.b}, 
-                                        ${item.a}
-                                        )`
-                                }}
-                                className='color-chooser'
-                            ></div>
-                        )
-                    })}
+        <div id='leftbar-container'>
+            <ChromePicker
+                color={pencilColor[0]}
+                onChange={e => { pencilColor[1](e.rgb) }}
+            />
+            <div id='pencil-width-container'>
+                <div id='pedro'>
+                    <span>{pencilWidthInPixels}</span>
                 </div>
+                <img
+                    src={widthArrow}
+                    alt="width-arrow"
+                    width={25}
+                    height={25}
+                />
                 <input
                     type="range"
                     value={pencilWidth[0]}
                     min={1}
-                    max={100}
-                    onChange={e => pencilWidth[1](e.currentTarget.value)}
+                    max={300}
+                    onChange={e => {
+                        pencilWidth[1](e.currentTarget.value)
+                        setPencilWidthInPixels(e.currentTarget.value)
+                    }}
                 />
             </div>
-        </>
+            <ColorGrid
+                colors={defaultColors}
+                setColor={pencilColor[1]}
+            />
+            <UtilsBar />
+        </div>
     )
 }
 

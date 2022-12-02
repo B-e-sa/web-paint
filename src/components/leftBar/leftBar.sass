@@ -4,21 +4,52 @@
     flex-direction: column
     align-items: center
     width: 20%
+    height: 100%
     min-width: fit-content
-    height: 100vh
+    min-height: 100%
     background-color: #373737
+    resize: "both"
 
-    #colors-grid
-        margin-top: 2rem
-        justify-content: center
-        height: fit-content
-        display: grid
-        align-content: center
-        grid-template-columns: 50px 50px 50px 50px 50px
-        grid-template-rows: 50px 50px
+#pencil-width-container
+    left: 10px
+    justify-content: center
+    display: flex
+    align-items: center
+    width: 100%
 
-.color-chooser
-    cursor: pointer
-    width: 35px
-    height: 35px
-    border-radius: 100%
+    > img
+        margin-right: 35px
+        width: 25px
+        height: 25px
+        filter: invert(100%)
+
+    input[type=range]
+        height: 8px
+        -webkit-appearance: none
+        width: 10rem
+        border-radius: 25px
+
+        &::-webkit-slider-runnable-track
+            cursor: pointer
+            background: #FFFFFF
+            border-radius: 5px
+
+        &::-webkit-slider-thumb
+            height: 8px
+            width: 2rem
+            border-radius: 3px
+            background: black
+            cursor: pointer
+            -webkit-appearance: none
+#pedro
+    position: relative
+
+    span
+        text-align: center
+        background-color: #373737
+        position: absolute
+        left: 2px
+        color: white
+        font-size: 8pt
+        width: 20px
+        top: -5px
